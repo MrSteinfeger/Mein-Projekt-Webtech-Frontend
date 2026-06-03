@@ -1,10 +1,47 @@
-<script setup>
-import ProductList from './components/ProductList.vue'
+<template>
+  <div class="shop-container">
+    <h2>Unsere Produkte</h2>
+    <p v-if="products.length === 0">Lade Produkte aus dem Backend...</p>
+
+    <ul v-else>
+      <li v-for="product in products" :key="product.id">
+        {{ product.name }} - {{ product.price }} €
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      // Das Array startet jetzt komplett leer
+      products: []
+    }
+  },
+  mounted() {
+    // Sobald die Vue-App im Browser startet, wird das Backend aufgerufen
+    this.fetchProducts();
+  },
+  methods: {
+    async fetchProducts() {
+      try {
+        // HIER ist deine Render-Backend-URL inklusive deiner /products Route!
+        const response = await fetch('https://webtech-mein-projekt-1.onrender.com/products');
+        if (!response.ok) {
+          throw new Error('Fehler beim Laden der Daten');
+        }
+        // Die JSON-Daten vom Server werden in dein products-Array gespeichert
+        this.products = await response.json();
+      } catch (error) {
+        console.error("Da ging was schief:", error);
+      }
+    }
+  }
+}
 </script>
 
-<template>
-  <main>
-    <h1>Willkommen im Webtech-Shop</h1>
-    <ProductList />
-  </main>
-</template>
+<style scoped>
+.shop-container { border: 1px solid #42b983; padding: 20px; border-radius: 8px; margin: 20px; }
+li { list-style-type: none; margin-bottom: 10px; font-weight: bold; }
+</style>
