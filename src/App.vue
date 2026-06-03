@@ -15,23 +15,20 @@
 export default {
   data() {
     return {
-      // Das Array startet jetzt komplett leer
       products: []
     }
   },
   mounted() {
-    // Sobald die Vue-App im Browser startet, wird das Backend aufgerufen
     this.fetchProducts();
   },
   methods: {
     async fetchProducts() {
       try {
-        // HIER ist deine Render-Backend-URL inklusive deiner /products Route!
-        const response = await fetch('https://webtech-mein-projekt-1.onrender.com/products');
+        // KORRIGIERT: /api/products hinzugefügt, passend zum Spring Boot @GetMapping
+        const response = await fetch('https://webtech-mein-projekt-1.onrender.com/api/products');
         if (!response.ok) {
           throw new Error('Fehler beim Laden der Daten');
         }
-        // Die JSON-Daten vom Server werden in dein products-Array gespeichert
         this.products = await response.json();
       } catch (error) {
         console.error("Da ging was schief:", error);
